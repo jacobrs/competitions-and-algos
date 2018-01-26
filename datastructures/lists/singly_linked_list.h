@@ -9,9 +9,11 @@ private:
 
 public:
     SinglyLinkedList();
+    ~SinglyLinkedList();
     void addElement(int val);
     int popElement();
     void printList();
+    int size();
 };
 
 #endif

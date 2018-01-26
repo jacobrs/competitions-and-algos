@@ -5,23 +5,22 @@ SinglyLinkedList::SinglyLinkedList(){
     root = nullptr;
 }
 
+SinglyLinkedList::~SinglyLinkedList(){
+    delete root;
+}
+
 void SinglyLinkedList::addElement(int val){
     if(root == nullptr){
         root = new Node(val);
         return;
     }
     Node *tail = root;
-    Node *prev = nullptr;
 
-    while(tail != nullptr){
-        prev = tail;
+    while(tail->getNext() != nullptr){
         tail = tail->getNext();
     }
 
-    tail = new Node(val);
-    if(prev != nullptr){
-        prev->setNext(tail);
-    }
+    tail->setNext(new Node(val));
 }
 
 int SinglyLinkedList::popElement(){
@@ -42,6 +41,17 @@ int SinglyLinkedList::popElement(){
     return val;
 }
 
+int SinglyLinkedList::size(){
+    Node * tail = root;
+    int size = 0;
+    while(tail != nullptr){
+        tail = tail->getNext();
+        size++;
+    }
+
+    return size;
+}
+
 void SinglyLinkedList::printList(){
     Node * curr = root;
     while(curr != nullptr){
@@ -56,12 +66,16 @@ int main(){
 
     l->addElement(1);
     l->addElement(2);
+    l->addElement(3);
+    l->addElement(4);
+    l->addElement(5);
 
     l->printList();
 
     std::cout << l->popElement() << std::endl;
 
     l->printList();
+    std::cout << l->size() << std::endl;
 
     delete l;
     return 0;
