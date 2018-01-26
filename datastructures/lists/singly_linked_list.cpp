@@ -1,62 +1,68 @@
-class Node {
-private:
-    Node * next;
-    int data;
+#include <iostream>
+#include "singly_linked_list.h"
 
-public:
-    explicit Node(int val){
-        next = nullptr;
-        data = val;
+SinglyLinkedList::SinglyLinkedList(){
+    root = nullptr;
+}
+
+void SinglyLinkedList::addElement(int val){
+    if(root == nullptr){
+        root = new Node(val);
+        return;
+    }
+    Node *tail = root;
+    Node *prev = nullptr;
+
+    while(tail != nullptr){
+        prev = tail;
+        tail = tail->getNext();
     }
 
-    Node *getNext(){
-        return next;
+    tail = new Node(val);
+    if(prev != nullptr){
+        prev->setNext(tail);
+    }
+}
+
+int SinglyLinkedList::popElement(){
+    Node *tail = root;
+    Node *prev = nullptr;
+
+    while(tail->getNext() != nullptr){
+        prev = tail;
+        tail = tail->getNext();
     }
 
-    int getValue(){
-        return data;
+    int val = tail->getValue();
+    delete tail;
+    if(prev != nullptr){
+        prev->setNext(nullptr);
     }
 
-    void setNext(Node * n){
-        next = n;
+    return val;
+}
+
+void SinglyLinkedList::printList(){
+    Node * curr = root;
+    while(curr != nullptr){
+        std::cout << curr->getValue() << " ";
+        curr = curr->getNext();
     }
+    std::cout << std::endl;
+}
 
-    ~Node(){
-        delete next;
-    }
-};
+int main(){
+    auto *l = new SinglyLinkedList();
 
-class SinglyLinkedList {
-private:
-    Node * root;
+    l->addElement(1);
+    l->addElement(2);
 
-public:
-    SinglyLinkedList(){
-        root = nullptr;
-    }
+    l->printList();
 
-    void addElement(int val){
-        Node *tail = root;
-        while(tail->getNext() != nullptr){
-            tail = tail->getNext();
-        }
+    std::cout << l->popElement() << std::endl;
 
-        tail->setNext(new Node(val));
-    }
+    l->printList();
 
-    void popElement(){
-        Node *tail = root;
-        Node *prev = nullptr;
-
-        while(tail->getNext() != nullptr){
-            prev = tail;
-            tail = tail->getNext();
-        }
-
-        int val = tail->getValue();
-        delete tail;
-        if(prev != nullptr){
-            prev->setNext(nullptr);
-        }
-    }
-};
+    delete l;
+    return 0;
+}
