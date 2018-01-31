@@ -1,6 +1,5 @@
 #include <climits>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
@@ -11,31 +10,35 @@ public:
         int beforeLast = INT_MIN;
         bool swapped = false;
         int i = 0;
+        bool repeat = false;
         for(auto n: nums){
             if(last == -1){
                 last = n;
                 i++;
                 continue;
             }
-            else if(n <= last && !swapped){
+            else if(n < last && !swapped){
                 if(i < nums.size() - 1){
                     if(n < nums.at(i+1)){
-                        if(n < beforeLast) {
+                        if(n < beforeLast && nums.at(i+1) < last) {
                             return false;
                         }
                     }else if(n == nums.at(i+1)){
-                        if(n < last){
+                        if(repeat){
                             return false;
                         }
                     }
                 }
                 swapped = true;
-            }else if(n <= last){
+            }else if(n < last){
                 return false;
             }
             if(last != n){
                 beforeLast = last;
                 last = n;
+                repeat = false;
+            }else{
+                repeat = true;
             }
             i++;
         }
