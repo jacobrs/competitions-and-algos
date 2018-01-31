@@ -17,16 +17,17 @@ public:
 class Solution {
 public:
     string longestWord(vector<string>& words) {
-        vector<Node *> root;
+        Node * root = new Node('_');
+        root->leaf = true;
         for(auto word : words) {
-            vector<Node *> eval = root;
+            vector<Node *>* eval = &(root->children);
             // foreach letter in word
             for(int j = 0; j < word.length(); j++){
                 // find or insert
                 bool found = false;
-                for(auto it: eval){
+                for(auto it: *eval){
                     if(it->data == word[j]){
-                        eval = it->children;
+                        eval = &it->children;
                         found = true;
                         if(j == word.length()-1){
                             it->leaf = true;
@@ -35,14 +36,35 @@ public:
                 }
                 if(!found){
                     auto n = new Node(word[j]);
-                    eval.push_back(n);
+                    eval->push_back(n);
                     if(j == word.length()-1){
                         n->leaf = true;
+                    }
+                    eval = &n->children;
+                }
+            }
+        }
+
+        return dfs(root, "");
+    }
+
+    string dfs(Node* root, string path){
+        if(root->children.empty()){
+            return path;
+        }
+        string res = path;
+        for(auto n : root->children){
+            if(n->leaf) {
+                string comp = dfs(n, path + n->data);
+                if (comp.length() > res.length()) {
+                    res = comp;
+                } else if (res.length() == comp.length()) {
+                    if (res.compare(comp) > 0) {
+                        res = comp;
                     }
                 }
             }
         }
-        // use dfs (iteratively) to find the longest string with all leaf bools
-
+        return res;
     }
 };
